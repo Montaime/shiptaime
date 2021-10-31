@@ -1,2 +1,2 @@
 # shiptaime
-Automation of shipping &amp; handling using Bandcamp's Merch Fullfillment API &amp; PirateShip
+Automation of shipping &amp; handling using Bandcamp's Merch Fullfillment API
