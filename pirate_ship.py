@@ -1,5 +1,8 @@
+import urllib
+
 import requests
 import os
+import urllib.request
 
 PIRATE_URL = "https://ship.pirateship.com/"
 EXPORT_URL = "https://ship.pirateship.com/batch_complete/export"
@@ -36,9 +39,18 @@ if __name__ == "__main__":
 
     # Create directory if it doesn't exist and get the path to that folder
     path = create_directory()
-    #print(file.content)
+    print(file.content)
+
+    file_name = ""
 
     # Download the file
+    with urllib.request.urlopen(url) as response, open(file_name, "wb") as output_file:
+        data = response.read()
+        output_file.write(data)
+
+    #response = urllib.request.urlopen(url, "spreadsheet.xlsx")
+    #data = response.read()
+    #text = data.decode('utf-8')
     #open(os.path.join(path, 'file.xlsx'), 'wb').write(file.content)
 
 
