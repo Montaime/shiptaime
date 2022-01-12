@@ -1,4 +1,5 @@
-import urllib
+# Test to view whether we can directly send requests to PirateShip's private API
+# Doesn't work currently.
 
 import requests
 import os
@@ -14,7 +15,6 @@ def create_directory():
     final = os.path.join(cwd, 'customer_tracking')
     if not os.path.exists(final):
         os.makedirs(final)
-
     return final
 
 if __name__ == "__main__":
@@ -33,7 +33,7 @@ if __name__ == "__main__":
     r = s.post(PIRATE_URL, data=data)
 
     # Testing shit to download this user's tracking data
-    url = EXPORT_URL + '?shipment_id=177161551'
+    url = EXPORT_URL + '?shipment_id=XXXXXXXXXX'
     file = s.get(url, allow_redirects=True)
     print(file.headers)
 
@@ -47,11 +47,5 @@ if __name__ == "__main__":
     with urllib.request.urlopen(url) as response, open(file_name, "wb") as output_file:
         data = response.read()
         output_file.write(data)
-
-    #response = urllib.request.urlopen(url, "spreadsheet.xlsx")
-    #data = response.read()
-    #text = data.decode('utf-8')
-    #open(os.path.join(path, 'file.xlsx'), 'wb').write(file.content)
-
 
 
