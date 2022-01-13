@@ -31,6 +31,8 @@ information alongside a brief message to each customer. As Montaime's customer b
 This application uses Pandas, an imported Python library to parse Pirate Ship formatted `.xlsx` spreadsheets. Please
 overview the `requirements.txt` file for additional requirements information.
 
+To use Shiptaime, you must run the `parse.py` script. This runs the pre-release backend framework for Shiptaime.
+
 The user is prompted for a valid path of a Excel spreadsheet via the command line. Not properly specifying the spreadsheet
 will result in an `Invalid spreadsheet!` error message, followed by program termination.
 
