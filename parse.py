@@ -35,9 +35,9 @@ def track_loop(arr):
     for i in range(len(arr)):
         # arr[i][2] = tracking no
         track_no = arr[i][2]
-        # AHOYcheck returns True if track # = simple export rate / asendia tracking, else false
+        # ahoy_b & num_b are bools checking if tracking # is Asendia, USPS Domestic or USPS Intl
         ahoy_b, num_b = AHOY_check(track_no)
-        # 2D indecies individually passed to be written to text file alongside bool value given by AHOYcheck
+        # 2D indices passed to be written to text file alongside bool values above
         write_file(arr[i], ahoy_b, num_b)
 
 # write_file()
@@ -47,55 +47,54 @@ def track_loop(arr):
 #               num_b: bool, checks whether a tracking number is entirely numerical (no alphabetical chars / symbols)
 # outputs:      none
 def write_file(cust_info, ahoy_b, num_b):
+    # cust_info array indices:
     # [0] = customer name
     # [1] = customer email
     # [2] = tracking number
 
     track = cust_info[2]
 
-    # create new file and set to append
-    # this solution is an issue - it'll keep appending to the same file.
-    # need to find a way to make a new file and continue appending, or give the user an option.
+    # "text.txt" is a placeholder
+    # if it already exists, it'll keep appending to that file
+    # to be implemented: asking the user to create new file, or give option to append to an existing file
 
-    # need a method to provide a new file / overwrite a previous file.
     file = open("test.txt", "a")
-    # temp method of fancily printing out customer name & email into .txt file (for now)
+    # temp method of fancily printing out customer name & email into .txt file
     file.write(cust_info[0] + " | " + cust_info[1] + " | ")
 
-    # if tracking is equal starts with "AHOY", this is an Asendia / Simple Export Rate tracking #
+    # Asendia / Simple Export Rate = ahoy_b
     if ahoy_b:
         # write shipping msg
         file.write(f"{msg_start} {intl_time} {msg_fin} {msg_asendia} {ASENDIA_URL + track} \n")
 
-    # if ahoy_b = false & num_b = true, not Asendia & is entirely numerical -> USPS domestic tracking
+    # USPS Domestic = not ahoy_b & num_b
     elif not ahoy_b and num_b:
         # write shipping msg
         file.write(f"{msg_start} {dom_time} {msg_fin} {msg_usps} {track} \n")
 
-    # o/w, both ahoy_b & num_b = false. not Asendia & not entirely numerical -> USPS intl tracking
+    # USPS Intl = not ahoy_b & not num_b
     else:
         file.write(f"{msg_start} {intl_time} {msg_fin} {msg_usps} {track} \n")
 
 # AHOY_check()
 # checks whether a tracking # starts with the letters "AHOY" and checks whether a tracking number is entirely numeric
-# inputs:       ahoy_check: bool value which checks whether tracking # starts with "AHOY"
-#               num_check: bool value checking whether a tracking number is entirely numerical
+# inputs:       track_no: tracking number provided by 2D array at index [i][2]
 # outputs:      ahoy_check, num_check
 def AHOY_check(track_no):
     ahoy_check = False
     num_check = False
 
-    # simple export rate tracking nums start with "AHOY" almost always
+    # If tracking number starts w/ AHOY, ahoy_check = true
     if track_no[0:4] == "AHOY":
         ahoy_check = True
 
-    # if entirely numeric, (9....),  has to be USPS media mail / first class (domestic)
+    # if entirely numeric, (9....),  has to be USPS Domestic (Media Mail or First Class), num_check = true
     # check for edge cases...
     elif track_no.isnumeric():
         num_check = True
 
-    # o/w it's simple export (some still use USPS intl #'s if going to Canada) & can be processed as
-    # regular USPS tracking #
+    # o/w, it's treated as a USPS Intl tracking #
+    # some simple export packages going to Canada just use USPS Intl tracking #s -> treat it like a reg USPS intl pkg
     return ahoy_check, num_check
 
 if __name__ == "__main__":
