@@ -1,7 +1,17 @@
+# Name:         Alexandru Galetus
+# email:        fibre@montai.me
+# file:         parse.py
+# Description:  This Python script is used for shiptaime, an automated system for Montaime's shipping and handing
+#               operations. The functions allow a user to specify a path to a spreadsheet, parsed by a Pandas dataframe
+#               and is sent out to a neatly formatted .txt file. This script is used for tracking updates to customers.
+
 import pandas as pd
 from config import *
 
+# sheet_parse()
 # parses .xls/.xlsx spreadsheet, given user path
+# inputs:       path: string provided by user with path to spreadsheet
+# outputs:      arr: 2D array parsed by pandas dataframe
 def sheet_parse(path):
     # initializing array
     arr = []
@@ -17,7 +27,10 @@ def sheet_parse(path):
         print("Invalid sheet!")
     return arr
 
+# track_loop()
 # Loops through tracking array data provided by sheetParse()
+# inputs:       arr: 2D array providing customer name, email, tracking #
+# outputs:      none
 def track_loop(arr):
     for i in range(len(arr)):
         # arr[i][2] = tracking no
@@ -27,7 +40,12 @@ def track_loop(arr):
         # 2D indecies individually passed to be written to text file alongside bool value given by AHOYcheck
         write_file(arr[i], ahoy_b, num_b)
 
-
+# write_file()
+# writes parsed customer info to .txt file
+# inputs:       cust_info: 1D array passed per each customer including cust name, email & tracking #
+#               ahoy_b: bool, checks whether tracking # starts with "AHOY"- if so, true
+#               num_b: bool, checks whether a tracking number is entirely numerical (no alphabetical chars / symbols)
+# outputs:      none
 def write_file(cust_info, ahoy_b, num_b):
     # [0] = customer name
     # [1] = customer email
@@ -44,22 +62,25 @@ def write_file(cust_info, ahoy_b, num_b):
     # temp method of fancily printing out customer name & email into .txt file (for now)
     file.write(cust_info[0] + " | " + cust_info[1] + " | ")
 
-    # if tracking is equal = "AHOYXXXXXX", Simple Export Rate is used
+    # if tracking is equal starts with "AHOY", this is an Asendia / Simple Export Rate tracking #
     if ahoy_b:
-        # there's gotta be a better way to do this other than string concatenation
-        file.write(msg_start + intl_time + msg_fin + msg_asendia + ASENDIA_URL + track + "\n")
+        # write shipping msg
+        file.write(f"{msg_start} {intl_time} {msg_fin} {msg_asendia} {ASENDIA_URL + track} \n")
 
-    # if tracking is entirely numerical (no alphabet/symbols), USPS Domestic used
+    # if ahoy_b = false & num_b = true, not Asendia & is entirely numerical -> USPS domestic tracking
     elif not ahoy_b and num_b:
         # write shipping msg
-        file.write(msg_start + dom_time + msg_fin + msg_usps + track + "\n")
+        file.write(f"{msg_start} {dom_time} {msg_fin} {msg_usps} {track} \n")
 
-    # else, must be USPS intl shipment
+    # o/w, both ahoy_b & num_b = false. not Asendia & not entirely numerical -> USPS intl tracking
     else:
-        # same as above
-        file.write(msg_start + intl_time + msg_fin + msg_usps + track + "\n")
+        file.write(f"{msg_start} {intl_time} {msg_fin} {msg_usps} {track} \n")
 
-# checks whether  a value
+# AHOY_check()
+# checks whether a tracking # starts with the letters "AHOY" and checks whether a tracking number is entirely numeric
+# inputs:       ahoy_check: bool value which checks whether tracking # starts with "AHOY"
+#               num_check: bool value checking whether a tracking number is entirely numerical
+# outputs:      ahoy_check, num_check
 def AHOY_check(track_no):
     ahoy_check = False
     num_check = False
@@ -78,10 +99,9 @@ def AHOY_check(track_no):
     return ahoy_check, num_check
 
 if __name__ == "__main__":
-    file_exists = False
+    # user provides spreadsheet path
     usr_path = input("Select a path for the Excel document you'd like to parse: ")
 
-    # check whether the path provided is actually a valid spreadsheet, o/w this breaks
-
+    # check whether the path provided is actually a valid spreadsheet
     arr = sheet_parse(usr_path)
     track_loop(arr)
