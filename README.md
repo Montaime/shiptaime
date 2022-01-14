@@ -1,6 +1,8 @@
 # shiptaime
 Automation of shipping &amp; handling using Bandcamp's Merch Fullfillment API &amp; Pirate Ship
 
+![shiptaime_cube](https://user-images.githubusercontent.com/71521969/149567441-4a925ddd-ffea-452a-bfab-459847bab063.png)
+
 Montaime uses Bandcamp's API for merch handling, which is currently being implemented into shiptaime. 
 
 Anyone attempting to use shiptaime does so at their own risk- there is no warranty or support associated with this 
